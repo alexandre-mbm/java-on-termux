@@ -1,5 +1,9 @@
+#!/bin/bash
+
 # Take filename as commandline argument
 cmd_arg=$1
+
+jar_android=/data/data/com.termux/files/usr/share/java/android.jar
 
 if [[ "$cmd_arg" == *".java"* ]]
 then		
@@ -9,9 +13,9 @@ then
 	file_name=$(echo "$file_name" | cut -f 1 -d '.')
 
 	# Compile and Execute
-	ecj $file_name.java
+	ecj $file_name.java || exit 1
 	dx --dex --output=$file_name.dex $file_name.class
-	dalvikvm -cp $file_name.dex $file_name ${@:2}
+	dalvikvm -cp $jar_android:$file_name.dex $file_name ${@:2}
 
 elif [ "$cmd_arg" == "install" ]
 then
