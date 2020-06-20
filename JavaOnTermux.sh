@@ -9,12 +9,21 @@ if [[ "$cmd_arg" == *".java"* ]]
 then		
 	file_name=$1
 
+	echo
+	echo "BUILD:"
+	echo
+
 	# Remove file extension
 	file_name=$(echo "$file_name" | cut -f 1 -d '.')
 
 	# Compile and Execute
 	ecj $file_name.java || exit 1
-	dx --dex --output=$file_name.dex $file_name.class
+	dx --verbose --dex --output=$file_name.dex $file_name.class
+
+	echo
+	echo "RUN:"
+	echo
+
 	dalvikvm -cp $jar_android:$file_name.dex $file_name ${@:2}
 
 elif [ "$cmd_arg" == "install" ]
